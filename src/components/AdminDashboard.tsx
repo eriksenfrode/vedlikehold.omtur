@@ -300,6 +300,22 @@ export default function AdminDashboard() {
                           ))
                         )}
                       </div>
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {w.serviceIds.length === 0 ? (
+                          <span className="rounded-full bg-moss-100 px-2.5 py-0.5 text-xs text-moss-700">
+                            Tilbyr alle tjenester
+                          </span>
+                        ) : (
+                          w.serviceIds.map((sid) => (
+                            <span
+                              key={sid}
+                              className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs text-bark-700"
+                            >
+                              {serviceName(sid)}
+                            </span>
+                          ))
+                        )}
+                      </div>
                     </div>
                     <div className="flex gap-2">
                       <button
@@ -437,6 +453,7 @@ export default function AdminDashboard() {
         <WorkshopModal
           draft={draft}
           brands={brands}
+          services={services}
           onChange={setDraft}
           onCancel={() => setDraft(null)}
           onSave={() => saveWorkshop(draft)}
@@ -449,12 +466,14 @@ export default function AdminDashboard() {
 function WorkshopModal({
   draft,
   brands,
+  services,
   onChange,
   onCancel,
   onSave,
 }: {
   draft: WorkshopDraft;
   brands: Brand[];
+  services: Service[];
   onChange: (d: WorkshopDraft) => void;
   onCancel: () => void;
   onSave: () => void;
@@ -466,6 +485,16 @@ function WorkshopModal({
       brandIds: has
         ? draft.brandIds.filter((b) => b !== id)
         : [...draft.brandIds, id],
+    });
+  }
+
+  function toggleService(id: string) {
+    const has = draft.serviceIds.includes(id);
+    onChange({
+      ...draft,
+      serviceIds: has
+        ? draft.serviceIds.filter((s) => s !== id)
+        : [...draft.serviceIds, id],
     });
   }
 
@@ -550,6 +579,34 @@ function WorkshopModal({
                     }`}
                   >
                     {b.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-bark-800">
+              Tjenester
+            </label>
+            <p className="mb-2 text-xs text-bark-700">
+              Ingen valgt = tilbyr alle tjenester.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {services.map((s) => {
+                const on = draft.serviceIds.includes(s.id);
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => toggleService(s.id)}
+                    className={`rounded-full px-3 py-1 text-sm transition ${
+                      on
+                        ? "bg-moss-600 text-white"
+                        : "border border-sand-200 text-bark-700 hover:bg-sand-100"
+                    }`}
+                  >
+                    {s.name}
                   </button>
                 );
               })}
