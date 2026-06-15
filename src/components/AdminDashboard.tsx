@@ -311,6 +311,7 @@ export default function AdminDashboard() {
                             city: w.city,
                             active: w.active,
                             brandIds: w.brandIds,
+                            serviceIds: w.serviceIds ?? [],
                           })
                         }
                         className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-bark-700 hover:bg-sand-100"
